@@ -51,7 +51,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e ".[dev]"
       - run: pytest --cov=smithery --cov-report=xml -m "not slow and not gpu"
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: matrix.python-version == '3.12'
         with:
           files: coverage.xml
