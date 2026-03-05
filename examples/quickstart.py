@@ -7,8 +7,6 @@ Usage:
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from smithery import __version__
 from smithery.config import load_config
 from smithery.data import MCPImporter, ToolCallGenerator, validate_dataset

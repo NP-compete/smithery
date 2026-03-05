@@ -17,8 +17,13 @@ class LoRAConfig(BaseModel):
     dropout: float = 0.05
     target_modules: list[str] = Field(
         default_factory=lambda: [
-            "q_proj", "v_proj", "k_proj", "o_proj",
-            "gate_proj", "up_proj", "down_proj",
+            "q_proj",
+            "v_proj",
+            "k_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj",
         ]
     )
 
@@ -38,9 +43,7 @@ class EvalConfig(BaseModel):
     """Post-training evaluation settings."""
 
     run_after_training: bool = True
-    metrics: list[str] = Field(
-        default_factory=lambda: ["tool_accuracy", "param_f1", "safety"]
-    )
+    metrics: list[str] = Field(default_factory=lambda: ["tool_accuracy", "param_f1", "safety"])
 
 
 class DataConfig(BaseModel):

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 from rich.console import Console
@@ -71,7 +71,7 @@ def train(
     config: Annotated[Path, typer.Option(help="Path to training YAML config.")],
     data: Annotated[Path, typer.Option(help="Path to training JSONL file.")],
     output: Annotated[
-        Optional[Path], typer.Option(help="Output directory for trained model.")
+        Path | None, typer.Option(help="Output directory for trained model.")
     ] = None,
 ) -> None:
     """Fine-tune a model with QLoRA."""
@@ -87,7 +87,7 @@ def train(
 def evaluate(
     model: Annotated[Path, typer.Option(help="Path to fine-tuned model.")],
     test_set: Annotated[Path, typer.Option(help="Path to test JSONL file.")],
-    tools: Annotated[Optional[Path], typer.Option(help="Path to tool definitions.")] = None,
+    tools: Annotated[Path | None, typer.Option(help="Path to tool definitions.")] = None,
 ) -> None:
     """Evaluate tool-calling accuracy."""
     raise NotImplementedError
@@ -122,7 +122,7 @@ def export_merge(
 def export_gguf(
     model: Annotated[Path, typer.Option(help="Path to merged model.")],
     quantize: Annotated[str, typer.Option(help="Quantization level.")] = "q4_k_m",
-    output: Annotated[Optional[Path], typer.Option(help="Output GGUF file path.")] = None,
+    output: Annotated[Path | None, typer.Option(help="Output GGUF file path.")] = None,
 ) -> None:
     """Export model to GGUF format for Ollama / llama.cpp."""
     raise NotImplementedError

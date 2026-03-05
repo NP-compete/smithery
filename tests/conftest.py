@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import pytest
 
-from smithery.types import DifficultyLevel, ToolCall, ToolDefinition, ToolParameter, TrainingExample
+from smithery.types import (
+    DifficultyLevel,
+    ToolCall,
+    ToolDefinition,
+    ToolParameter,
+    TrainingExample,
+)
 
 
 @pytest.fixture()
@@ -37,7 +43,9 @@ def sample_tools(sample_tool: ToolDefinition) -> list[ToolDefinition]:
             description="Search documentation by query.",
             parameters=[
                 ToolParameter(name="query", type="string", description="Search query."),
-                ToolParameter(name="limit", type="integer", description="Max results.", default=10),
+                ToolParameter(
+                    name="limit", type="integer", description="Max results.", default=10
+                ),
             ],
         ),
         ToolDefinition(
