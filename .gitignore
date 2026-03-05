@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Distribution
+*.tar.gz
+*.zip
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets / Environment
+.env
+.env.*
+
+# Model artifacts (large files)
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+output/
+merged/
+
+# Experiment tracking
+wandb/
+mlruns/
+
+# Data (generated)
+data/*.jsonl
+data/*.json
+!data/.gitkeep
