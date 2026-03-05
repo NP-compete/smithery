@@ -1,0 +1,36 @@
+base_model: mistralai/Mistral-7B-Instruct-v0.3
+method: qlora
+quantization: 4bit
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - v_proj
+    - k_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+training:
+  epochs: 3
+  batch_size: 4
+  learning_rate: 1e-4
+  gradient_accumulation_steps: 4
+  max_seq_length: 4096
+  warmup_ratio: 0.03
+
+data:
+  format: chatml_tools
+  train_split: 0.9
+  shuffle: true
+
+eval:
+  run_after_training: true
+  metrics:
+    - tool_accuracy
+    - param_f1
+    - safety
