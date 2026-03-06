@@ -21,7 +21,7 @@ app = typer.Typer(
 console = Console()
 
 
-def _version_callback(value: bool) -> None:
+def _version_callback(value: bool | None) -> None:
     if value:
         console.print(f"smithery {__version__}")
         raise typer.Exit()
@@ -46,6 +46,9 @@ def main(
 @app.command()
 def version() -> None:
     """Show smithery version and environment info."""
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as pkg_version
+
     console.print(f"smithery {__version__}")
     console.print(f"Python {sys.version.split()[0]}")
 
@@ -55,8 +58,6 @@ def version() -> None:
         ("peft", "PEFT"),
     ]:
         try:
-            from importlib.metadata import version as pkg_version
-
             ver = pkg_version(pkg)
             extra = ""
             if pkg == "torch":
@@ -64,7 +65,7 @@ def version() -> None:
 
                 extra = f" (CUDA {torch.version.cuda})" if torch.cuda.is_available() else " (CPU)"
             console.print(f"{label} {ver}{extra}")
-        except Exception:
+        except (PackageNotFoundError, ImportError):
             console.print(f"{label}: not installed")
 
     console.print(f"Platform: {platform.system()} {platform.release()} ({platform.machine()})")

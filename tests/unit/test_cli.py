@@ -19,6 +19,7 @@ def test_version_short_flag() -> None:
     result = runner.invoke(app, ["-V"])
     assert result.exit_code == 0
     assert "smithery" in result.stdout
+    assert __version__ in result.stdout
 
 
 def test_version_command() -> None:
