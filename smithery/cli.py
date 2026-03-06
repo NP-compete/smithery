@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import platform
+import sys
 from pathlib import Path
 from typing import Annotated
 
 import typer
 from rich.console import Console
+
+from smithery import __version__
 
 app = typer.Typer(
     name="smithery",
@@ -15,6 +19,56 @@ app = typer.Typer(
     rich_markup_mode="rich",
 )
 console = Console()
+
+
+def _version_callback(value: bool) -> None:
+    if value:
+        console.print(f"smithery {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def main(
+    version: Annotated[
+        bool | None,
+        typer.Option(
+            "--version",
+            "-V",
+            callback=_version_callback,
+            is_eager=True,
+            help="Show version and exit.",
+        ),
+    ] = None,
+) -> None:
+    """Forge tool-calling models from your API definitions."""
+
+
+@app.command()
+def version() -> None:
+    """Show smithery version and environment info."""
+    console.print(f"smithery {__version__}")
+    console.print(f"Python {sys.version.split()[0]}")
+
+    for pkg, label in [
+        ("torch", "PyTorch"),
+        ("transformers", "Transformers"),
+        ("peft", "PEFT"),
+    ]:
+        try:
+            from importlib.metadata import version as pkg_version
+
+            ver = pkg_version(pkg)
+            extra = ""
+            if pkg == "torch":
+                import torch
+
+                extra = f" (CUDA {torch.version.cuda})" if torch.cuda.is_available() else " (CPU)"
+            console.print(f"{label} {ver}{extra}")
+        except Exception:
+            console.print(f"{label}: not installed")
+
+    console.print(f"Platform: {platform.system()} {platform.release()} ({platform.machine()})")
+
 
 # ---------------------------------------------------------------------------
 # Sub-command groups
