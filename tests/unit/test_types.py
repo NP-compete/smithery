@@ -64,6 +64,44 @@ class TestEvalMetrics:
         assert "0.93" in md
         assert "| Metric" in md
 
+    def test_to_markdown_without_baseline(self) -> None:
+        """Two-column table when no baseline provided."""
+        metrics = EvalMetrics(tool_selection_accuracy=0.90, parameter_extraction_f1=0.85)
+        md = metrics.to_markdown()
+        assert "| Metric | Score |" in md
+        assert "vs. Baseline" not in md
+        assert "|---|---|" in md
+
+    def test_to_markdown_with_baseline(self) -> None:
+        """Three-column table with delta column."""
+        metrics = EvalMetrics(tool_selection_accuracy=0.90)
+        baseline = EvalMetrics(tool_selection_accuracy=0.80)
+        md = metrics.to_markdown(baseline=baseline)
+        assert "vs. BaseLine" in md
+        assert "|---|---|---|" in md
+        assert "90.0%" in md
+
+    def test_to_markdown_positive_delta(self) -> None:
+        """Improvements show + prefix."""
+        metrics = EvalMetrics(tool_selection_accuracy=0.90)
+        baseline = EvalMetrics(tool_selection_accuracy=0.80)
+        md = metrics.to_markdown(baseline=baseline)
+        assert "+10.0%" in md
+
+    def test_to_markdown_negative_delta(self) -> None:
+        """Regressions show - prefix."""
+        metrics = EvalMetrics(tool_selection_accuracy=0.70)
+        baseline = EvalMetrics(tool_selection_accuracy=0.80)
+        md = metrics.to_markdown(baseline=baseline)
+        assert "-10.0%" in md
+
+    def test_to_markdown_zero_delta(self) -> None:
+        """No change shows +0."""
+        metrics = EvalMetrics(tool_selection_accuracy=0.80)
+        baseline = EvalMetrics(tool_selection_accuracy=0.80)
+        md = metrics.to_markdown(baseline=baseline)
+        assert "+0.0%" in md
+
 
 class TestToolCall:
     def test_basic(self) -> None:
