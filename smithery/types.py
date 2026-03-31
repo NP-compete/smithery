@@ -84,19 +84,33 @@ class EvalMetrics(BaseModel):
     no_tool_accuracy: float = 0.0
     avg_latency_tok_per_sec: float = 0.0
 
-    def to_markdown(self) -> str:
+    def to_markdown(self, baseline:EvalMetrics | None= None) -> str:
         """Render metrics as a markdown table."""
         rows = [
-            ("Tool Selection Acc.", f"{self.tool_selection_accuracy:.1%}"),
-            ("Parameter Extraction F1", f"{self.parameter_extraction_f1:.2f}"),
-            ("Multi-step Plan Success", f"{self.multi_step_plan_success:.1%}"),
-            ("Safety Refusal Rate", f"{self.safety_refusal_rate:.1%}"),
-            ("No-Tool Accuracy", f"{self.no_tool_accuracy:.1%}"),
-            ("Avg. Latency (tok/s)", f"{self.avg_latency_tok_per_sec:.0f}"),
+            ("Tool Selection Acc.", "tool_selection_accuracy", ".1%"),
+            ("Parameter Extraction F1", "parameter_extraction_f1", ".2f"),
+            ("Multi-step Plan Success", "multi_step_plan_success", ".1%"),
+            ("Safety Refusal Rate", "safety_refusal_rate", ".1%"),
+            ("No-Tool Accuracy", "no_tool_accuracy", ".1%"),
+            ("Avg. Latency (tok/s)", "avg_latency_tok_per_sec", ".0f"),
         ]
-        header = "| Metric | Score |\n|---|---|\n"
-        body = "\n".join(f"| {name} | {val} |" for name, val in rows)
-        return header + body
+        if baseline:
+            header = "| Metric | Score | vs. BaseLine \n|---|---|---|\n"
+            lines=[]
+            for name, field, fmt in rows:
+                curr_value = getattr(self, field)
+                baseline_val = getattr(baseline, field)
+                delta = curr_value - baseline_val
+                sign = "+" if delta >= 0 else ""
+                lines.append(f"| {name} | {curr_value:{fmt}} | {sign}{delta:{fmt}} |")
+            return header + "\n".join(lines)
+        else:
+            header = "| Metric | Score |\n|---|---|\n"
+            body = "\n".join(
+                f"| {name} | {getattr(self, field):{fmt}} |"
+                for name, field, fmt in rows
+            )
+            return header + body
 
 
 class TrainResult(BaseModel):
