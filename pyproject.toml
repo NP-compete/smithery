@@ -43,7 +43,7 @@ dependencies = [
     "peft>=0.10",
     "trl>=0.8",
     "torch>=2.2",
-    "accelerate>=0.28",
+    "accelerate>=1.13.0",
     "bitsandbytes>=0.43",
     "jsonschema>=4.20",
 ]
