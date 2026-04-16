@@ -51,7 +51,7 @@ dependencies = [
 [project.optional-dependencies]
 export = [
     "llama-cpp-python>=0.2",
-    "huggingface-hub>=0.22",
+    "huggingface-hub>=1.10.2",
 ]
 wandb = ["wandb>=0.16"]
 all = ["smithery[export,wandb]"]
